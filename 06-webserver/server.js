@@ -1,8 +1,9 @@
 const express = require('express')
 const app = express()
-const port = 3000
+const port = process.env.PORT || 3000;
 
 const hbs = require('hbs');
+require('./hbs/helpers');
 
 app.use(express.static(__dirname + '/public'));
 
@@ -12,10 +13,11 @@ app.set('view engine', 'hbs');
 
 app.get('/', (req, res) => {
     /* res.send('Hello World!') */
+    res.render('home', {})
+});
 
-    res.render('home', {
-        year: new Date().getFullYear()
-    })
+app.get('/about', (req, res) => {
+    res.render('about', {})
 });
 
 app.listen(port, () => {
