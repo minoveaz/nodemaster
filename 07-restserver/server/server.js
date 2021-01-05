@@ -1,8 +1,10 @@
 require('./config/config')
 
-const express = require('express')
+const express = require('express');
+const mongoose = require('mongoose');
+
+const colors = require('colors');
 const app = express()
-const port = 3000
 const bodyParser = require('body-parser')
 
 // parse application/x-www-form-urlencoded
@@ -11,35 +13,18 @@ app.use(bodyParser.urlencoded({ extended: false }))
 // parse application/json
 app.use(bodyParser.json())
 
-app.get('/user', (req, res) => {
-    res.send('Get Usuario')
-})
+app.use(require('./routes/user'));
 
-app.post('/user', (req, res) => {
-    let body = req.body;
-    if (body.name === undefined) {
-        res.status(400).json({
-            ok: false,
-            message: 'name is required',
-        })
-    } else {
-        res.json({
-            persona: body
-        });
-    }
-})
+mongoose.connect('mongodb://localhost:27017/cafe', (err, res) => {
 
-app.put('/user/:id', (req, res) => {
-    let id = req.params.id;
-    res.json({
-        id
-    });
-})
+    if (err) throw err;
+    console.log('=========Server============'.green);
+    console.log('Base de datos Online');
+    console.log('=========Server============'.green);
 
-app.delete('/user', (req, res) => {
-    res.send('Delete Usuario')
-})
+});
+
 
 app.listen(process.env.PORT, () => {
-    console.log(`Example app listening at http://localhost:${process.env.PORT}`)
+    console.log(`Example app listening at http://localhost:${process.env.PORT}`.yellow)
 })
